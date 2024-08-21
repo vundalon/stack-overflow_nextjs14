@@ -22,5 +22,6 @@
     "plist"
   ],
   "auto-rename-tag.activationOnLanguage": ["*"],
-  "eslint.codeActionsOnSave.rules": null
+  "eslint.codeActionsOnSave.rules": null,
+  "css.customData": [".vscode/tailwind.json"]
 }
