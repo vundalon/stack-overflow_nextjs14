@@ -1,9 +1,27 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/ask-question(.*)"]);
+// Define protected routes
+const isProtectedRoute = createRouteMatcher([
+  "/ask-question(.)",
+  "/question/:id",
+  "/tags",
+  "/tags/:id",
+  "/profile/:id",
+  "/community",
+  "/jobs",
+]);
+
+// Define public routes that should not be protected
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/api/webhook(.)", // Ensure that webhook routes are public
+  "/api/chatgpt",
+]);
 
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  if (isProtectedRoute(req) && !isPublicRoute(req)) {
+    auth().protect();
+  }
 });
 
 export const config = {
