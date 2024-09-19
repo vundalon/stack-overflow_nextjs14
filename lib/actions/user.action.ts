@@ -8,11 +8,13 @@ import {
   DeleteUserParams,
   GetAllUsersParams,
   GetSavedQuestionsParams,
+  GetUserByIdParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+import Answer from "@/database/answer.model";
 
 export async function getUserById(params: any) {
   try {
@@ -176,6 +178,37 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     const savedQuestions = user.saved;
 
     return { questions: savedQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserInfo(params: GetUserByIdParams) {
+  try {
+    connectToDatabase();
+
+    // destructure the userId from the params
+
+    const { userId } = params;
+    // fetch the user
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+    // Get many things about this user
+
+    const totalQuestions = await Question.countDocuments({ author: user._id });
+    const totalAnswers = await Answer.countDocuments({ author: user._id });
+
+    // return the user and the total questions and answers
+    return {
+      user,
+      totalQuestions,
+      totalAnswers,
+    };
   } catch (error) {
     console.log(error);
     throw error;
