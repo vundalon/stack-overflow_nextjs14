@@ -9,6 +9,7 @@ import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { getJoinedDate } from "@/lib/utils";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
@@ -29,13 +30,17 @@ const Page = async ({ params, searchParams }: URLProps) => {
           />
 
           <div className="mt-3">
-            <h2>{userInfo.user.name}</h2>
-            <p>@{userInfo.user.username}</p>
+            <h2 className="h2-bold text-dark-100_light900">
+              {userInfo.user.name}
+            </h2>
+            <p className="paragraph-regular text-dark200_light800">
+              @{userInfo.user.username}
+            </p>
 
             <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
               {userInfo.user.location && <>location</>}
 
-              {userInfo.user.joinedAt.toString()}
+              {getJoinedDate(userInfo.user.joinedAt)}
             </div>
 
             {userInfo.user.bio && <p>{userInfo.user.bio}</p>}
@@ -56,15 +61,17 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
       Stats
       <div className="mt-10 flex gap-10">
-        <Tabs defaultValue="account" className="w-[400px]">
-          <TabsList>
-            <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="password">Password</TabsTrigger>
+        <Tabs defaultValue="top-posts" className="flex-1">
+          <TabsList className="background-light800_dark400 min-h-[42px] p-1">
+            <TabsTrigger value="top-posts" className="tab">
+              Top Posts
+            </TabsTrigger>
+            <TabsTrigger value="answers" className="tab">
+              Answers
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="account">
-            Make changes to your account here.
-          </TabsContent>
-          <TabsContent value="password">Change your password here.</TabsContent>
+          <TabsContent value="top-posts">POSTS</TabsContent>
+          <TabsContent value="answers">ANSWERS</TabsContent>
         </Tabs>
       </div>
     </>
